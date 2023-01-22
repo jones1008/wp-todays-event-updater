@@ -37,7 +37,7 @@ async function main() {
         const newCategories = event.categories
           .filter(c => c.id !== CATEGORY_TODAY_WP_ID)
           .map(c => c.id);
-        console.info(`Trying to remove category 'HEUTE' from event ${event.url} (${event.id})`);
+        console.info(`INFO: Trying to remove category 'HEUTE' from event ${event.url} (${event.id})`);
         const res = await setCategory(event, newCategories);
         if (!res.ok) {
           console.error(`ERROR: could not remove category 'HEUTE' from event ${event.url} (${event.id})`);
@@ -76,7 +76,7 @@ async function main() {
         console.log('');
       }
     } else {
-      console.info("no events found today that would need the category 'today'");
+      console.info("INFO: no events found today that would need the category 'today'");
     }
   } else {
     console.error(`ERROR: could not get todays events`);
