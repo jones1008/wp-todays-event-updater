@@ -21,10 +21,13 @@ main();
 
 // MAIN //
 async function main() {
+  console.info('execution on ', new Date().toString());
+
   // check ENV variables
   if (!wpCredentials) {
     console.error('ERROR: no credentials provided in ENV');
     console.info('wpCredentials', wpCredentials);
+    newDayLog();
     return 1;
   }
 
@@ -52,6 +55,7 @@ async function main() {
   } else {
     console.error(`ERROR: could not get events with category today`)
     await writeError(res);
+    newDayLog();
     return 2;
   }
 
@@ -81,8 +85,10 @@ async function main() {
   } else {
     console.error(`ERROR: could not get todays events`);
     await writeError(res2);
+    newDayLog();
     return 3;
   }
+  newDayLog();
 }
 
 
@@ -145,4 +151,9 @@ async function writeError(response) {
   console.error(`${response.status}: ${response.statusText}`);
   const json = await response.json();
   console.error(json);
+}
+
+function newDayLog() {
+  console.log('');
+  console.log('');
 }
