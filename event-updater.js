@@ -66,9 +66,9 @@ async function main() {
     if (todaysEvents.length > 0) {
       for (const event of todaysEvents) {
         const currentCategoryIds = event.categories.map(c => c.id);
-        let newCategories = currentCategoryIds;
+        let newCategories = JSON.parse(JSON.stringify(currentCategoryIds));
         if (!currentCategoryIds.includes(CATEGORY_TODAY_WP_ID)) {
-          newCategories.push(currentCategoryIds);
+          newCategories.push(CATEGORY_TODAY_WP_ID);
         }
         console.info(`INFO: Trying to set category 'HEUTE' for event ${event.url} (${event.id})`);
         const res = await setCategory(event, newCategories);
@@ -119,6 +119,7 @@ function setCategory(event, categories) {
   myHeaders.append("Authorization", `Basic ${base64}`);
   myHeaders.append("Content-Type", "application/json");
 
+  console.log(categories);
   const raw = JSON.stringify({ "categories": categories });
 
   const requestOptions = {
