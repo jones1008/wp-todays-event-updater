@@ -34,7 +34,7 @@ async function main() {
   // first reset all events so they don't have the today category
   const res = await getEventsWithCategoryToday();
   if (res.ok) {
-    const eventsWithCategoryToday = await res.json();
+    const eventsWithCategoryToday = await res.json().then(r => r.events);
     if (eventsWithCategoryToday.length > 0) {
       for (const event of eventsWithCategoryToday) {
         const newCategories = event.categories
