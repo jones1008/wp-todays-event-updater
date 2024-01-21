@@ -1,3 +1,7 @@
+// Wordpress Swagger API documentation can be found here:
+// https://klimateam-schoental.de/wp-json/tribe/events/v1/doc (download json) and upload here:
+// https://editor.swagger.io/
+
 // GLOBAL VARIABLES //
 const API_ROOT = 'https://klimateam-schoental.de/wp-json/tribe/events/v1/';
 const CATEGORY_TODAY_WP_ID = 12;
@@ -74,6 +78,8 @@ async function main() {
         const res = await setCategory(event, newCategories);
         if (!res.ok) {
           console.error(`ERROR: could not set category 'HEUTE' for event ${event.url} (${event.id})`);
+          const error = await res.json();
+          console.error(error)
         } else {
           console.info('SUCCESS: Successfully added category');
         }
@@ -119,8 +125,9 @@ function setCategory(event, categories) {
   myHeaders.append("Authorization", `Basic ${base64}`);
   myHeaders.append("Content-Type", "application/json");
 
-  console.log(categories);
-  const raw = JSON.stringify({ "categories": categories });
+  const updatedEvent = convertToRequestEvent(event);
+  updatedEvent.categories = categories;
+  const raw = JSON.stringify(updatedEvent);
 
   const requestOptions = {
     method: 'POST',
@@ -132,6 +139,35 @@ function setCategory(event, categories) {
   const url = new URL(`events/${event.id}`, API_ROOT);
   console.log(`DEBUG: request-URL: ${url.toString()}`);
   return fetch(url, requestOptions);
+}
+
+function convertToRequestEvent(event) {
+  return {
+    author: event.author,
+    date: event.date,
+    date_utc: event.date_utc,
+    title: event.title,
+    description: event.description,
+    slug: event.slug,
+    // excerpt: event.excerpt,
+    status: event.status,
+    timezone: event.timezone,
+    all_day: event.all_day,
+    start_date: event.start_date,
+    end_date: event.end_date,
+    image: event.image.url,
+    cost: event.cost,
+    website: event.website,
+    show_map: event.show_map,
+    show_map_link: event.show_map_link,
+    hide_from_listings: event.hide_from_listings,
+    sticky: event.sticky,
+    featured: event.featured,
+    categories: event.categories,
+    tags: event.tags,
+    venue: event.venue,
+    organizer: event.organizer
+  }
 }
 
 function formatDate(date) {
